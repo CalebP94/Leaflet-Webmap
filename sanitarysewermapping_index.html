@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="redgis_rootcontrol_map_dataentry.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin="">
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root Control Mapping/Data Entry</title>
+</head>
+<body>
+    <div id="top">
+        <div id="mapdiv"></div>
+            <div class="dataEntry">
+            <h4> Log Root Control</h6>
+            <form id="logRC" method="post">
+                <p class="formEntry">
+                    <label for="facilityid">Facility ID: </label>
+                    <input type="text" class= "form-control" name="facilityid" id="facilityid" placeholder="Facility ID Entry">
+                    <label for="datetreated">Date Treated: </label>
+                    <input type="text" class= "form-control" name="datetreated" id="datetreated" placeholder="Date Treated">
+                    <label for="subbasin">Subbasin: </label>
+                    <input type="text" class = "form-control" name="subbasin" id="subbasin" placeholder="Subbasin">
+                    <label for="lengthtreated">Length Treated: </label>
+                    <input type="text" class="form-control" name="lengthtreated" id="lengthtreated" placeholder="Length Treated">
+                </p>
+                <p>
+                    <input class="form-control" type="button" value="Enter" style= "width:25%;" id="logger">
+                </p>
+            </form>
+            <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            </div>
+            </div>
+        <div id="mapLegend">
+            <select  class="subbasinII" >
+                <option value='CC01'>CC01</option>
+                <option value='CC02'>CC02</option>
+                <option value='CC03'>CC03</option>
+                <option value='CC04'>CC04</option>
+                <option value='CC05'>CC05</option>
+            </select><br>
+            <input type="button" name="save" value="Query" id="filterSubmit">
+        </div>
+    </div>
+    <div id="bottom">
+        <div id="fromDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
+    </div>
+        <div id="toDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
+    </div>
+    <script type="text/javascript">
+    //Tables
+        document.getElementById("filterSubmit").addEventListener("click", function(){
+            $.ajax({
+            url:'asset_display.php',
+            type:'POST',
+            data: {subbasin: $(".subbasinII").val()},
+            success: function(response){
+                $("#fromDB").html(response);
+                }
+            });
+        });
+        document.getElementById("filterSubmit").addEventListener("click", function(){
+            $.ajax({
+            url:'rootcontrol_display.php',
+            type:'POST',
+            data: {subbasin: $(".subbasinII").val()},
+            success: function(response){
+                $("#toDB").html(response);
+                }
+            });
+        });
+    //Load Features
+        var subbasinHolder=[];
+        var mhHolder=[];
+        var gmHolder=[];
+    //subbasin
+        document.getElementById("filterSubmit").addEventListener("click", function(){   
+            $.ajax({
+            url:'mapfeatures_final.php',
+            type:'POST',
+            data: {subbasinid: $(".subbasinII").val()},
+            success: function(response){
+                var mapper = JSON.parse(response);
+                var subbasinMapped=L.geoJSON(mapper,{
+                    style: function(feature){
+                        return {color: "#42484d"}
+                    }
+                });
+                subbasinHolder.push(subbasinMapped);                
+                for(i=0;i<subbasinHolder.length;i++){
+                    if(i==subbasinHolder.length-1){
+                        subbasinHolder[i].addTo(mymap); 
+                        mymap.fitBounds(subbasinHolder[i].getBounds());
+                    }
+                    else if(i<subbasinHolder.length-1){
+                        mymap.removeLayer(subbasinHolder[i]);
+                    }  
+                }
+            },
+            error:function(xhr, status, error){
+                var err = eval("(" + xhr.responseText + ")");
+                console.log(err.Message);
+            }
+            });
+        });
+    //manholes
+        document.getElementById("filterSubmit").addEventListener("click", function(){   
+            $.ajax({
+            url:'mapMH.php',
+            type:'POST',
+            data: {subbasinid: $(".subbasinII").val()},
+            success: function(responseII){
+                //console.log(responseII)
+                var mapperIII = JSON.parse(responseII);
+                var mhMapped=L.geoJSON(mapperIII,{
+                    pointToLayer: function(feature,geom){
+                        return new L.CircleMarker(geom,{
+                            radius:3, 
+                            fillOpacity: 1,
+                            fillColor: "#008d0c",
+                            color: "#008d0c"
+                        }).bindTooltip(function(layer){
+                            return layer.feature.properties.facilityid;
+                        },
+                        {permanent:false,
+                        opacity: 0.9
+                        }
+                        );
+                    }/*
+                    
+                    onEachFeature: function(feature, layer){
+
+                        //layer.bindPopup(feature.properties.facilityid);
+                        /*return new L.tooltip(layer,{
+                            permanent:true
+                        })*/
+                        /*
+                        var permLabel = new L.tooltip(layer{
+                            permanent:true
+                        
+                        });
+
+                        
+                    }*/
+                });
+                mhHolder.push(mhMapped);                
+                for(i=0;i<mhHolder.length;i++){
+                    if(i==mhHolder.length-1){
+                        mhHolder[i].addTo(mymap); 
+                        //mymap.fitBounds(gmHolder[i].getBounds());
+                    }
+                    else if(i<mhHolder.length-1){
+                        mymap.removeLayer(mhHolder[i]);
+                    }  
+                }
+            },
+            error:function(xhr, status, error){
+                var err = eval("(" + xhr.responseText + ")");
+                console.log(err.Message);
+            }
+            });
+        });
+    //gravitymains
+        document.getElementById("filterSubmit").addEventListener("click", function(){   
+            $.ajax({
+            url:'mapGM.php',
+            type:'POST',
+            data: {subbasinid: $(".subbasinII").val()},
+            success: function(responseII){
+                console.log(responseII)
+                var mapperII = JSON.parse(responseII);
+                var gmMapped=L.geoJSON(mapperII,{
+                    style: function(feature){
+                        return {color:"#01c711"};
+                    }
+                });
+                //gmMapped.addTo(mymap);
+                
+                gmHolder.push(gmMapped);                
+                for(i=0;i<gmHolder.length;i++){
+                    if(i==gmHolder.length-1){
+                        gmHolder[i].addTo(mymap); 
+                        //mymap.fitBounds(gmHolder[i].getBounds());
+                    }
+                    else if(i<gmHolder.length-1){
+                        mymap.removeLayer(gmHolder[i]);
+                    }  
+                }
+            },
+            error:function(xhr, status, error){
+                var err = eval("(" + xhr.responseText + ")");
+                console.log(err.Message);
+            }
+            });
+        });
+
+    //Insert Treated
+        $(document).ready(function(){
+            $('#logger').on('click', function(){
+                console.log('clicked');
+                $('#logger').attr("disabled", "disabled");
+                var facilityid= $("#facilityid").val();
+                var datetreated= $("#datetreated").val();
+                var subbasin= $("#subbasin").val();
+                var lengthtreated= $("#lengthtreated").val()
+                    $.ajax({
+                        url: '/RedGIS/rootcontrollog.php',
+                        type: 'POST',
+                        data:{
+                            facilityid: facilityid,
+                            datetreated: datetreated,
+                            subbasin: subbasin,
+                            lengthtreated: lengthtreated
+                        },
+                        cache:false,
+                        success: function(response){ 
+                            var dataResult = JSON.parse(response);
+                            console.log(dataResult);
+                            if(dataResult.statusCode==200){
+                                $("#logger").removeAttr("disabled");
+                                $('#logRC').find('input:text').val(''); 
+                                console.log('database connected');
+                            }
+                            else if(dataResult.statusCode==201){
+                                alert("Connection Error");
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            var err = eval("(" + xhr.responseText + ")");
+                            console.log(err.Message);
+                        }
+                    });
+                });
+            });
+    //Load tiles and map
+        var mymap= L.map('mapdiv');
+        mymap.setView([34.0007, -81.0348], 11);
+        var backgroundLayer= L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+        mymap.addLayer(backgroundLayer);
+    </script>
+</body>
+</html>
+
+
+
