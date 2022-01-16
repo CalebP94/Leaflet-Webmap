@@ -1,0 +1,103 @@
+:root {
+    --color-brand--1: #ffb545;
+    --color-brand--2: #01c711;
+  
+    --color-dark--: #26252e;
+    --color-dark--2: #42484d;
+    --color-light--1: rgb(235, 226, 226);
+    --color-light--2: #e7e7e7;
+    --color-light--3: rgb(200, 200, 200);
+  }
+  body {
+    font-family: 'Manrope', sans-serif;
+    font-weight: bold;
+    background-color: var(--color-light--2);
+    color:  var(--color-dark--2);
+    height: 1000px;
+    width: 1400px;
+    background-color: #42484d;
+  }
+  h4{
+    font-family: 'Manrope', sans-serif;
+    font-weight: bold;
+
+  }
+  #top{
+      height: 650px;
+      width: 1400px;
+      top: 10px;
+      background-color: var(--color-light--3);
+      position:absolute;
+
+  }
+  #mapdiv{
+    height: 500px;
+    width:900px;
+    border: 2px solid rgb(235, 226, 226);
+    top:10px;
+    left: 3px;
+    position: absolute;
+    padding:5px;
+    border-radius: 1%;
+}
+div.dataEntry{
+    position:absolute;
+    height: 500px;
+    width:475px;
+    border: 2px solid rgb(235, 226, 226);
+    padding:5px;
+    border-radius:1%;
+    left:905px;
+    top:10px;
+    background-color: #e7e7e7;
+
+}
+P.formEntry{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    color: var(--color-dark--2) ;
+}
+#mapLegend{
+    position:relative;
+    left: 3px;
+    padding:5px;
+    border-radius: 1%;
+    background-color: #e7e7e7;  
+    height:75px;
+    width: 900px;
+    top: 511px;
+}
+#bottom{
+    position:relative;
+    top:650px;
+    width:1403px;
+    height:310px;
+    background-color: white;
+    border: 2px solid var(--color-dark--2);
+    padding:5px;
+}
+#fromDB{
+    position:relative;
+    width:690px;
+    border: 2px solid rgb(235, 226, 226);
+    height:300px;
+}
+#toDB{
+    top: 657px;
+    position:absolute;
+    left:701px;
+    width:700px;
+    border: 2px solid rgb(235, 226, 226);
+    height:300px;
+}
+.my-custom-scrollbar{
+    position: relative;
+    height: 75px;
+    overflow: auto;
+  }
+  .table-wrapper-scroll-y{
+    display:block;
+  }
