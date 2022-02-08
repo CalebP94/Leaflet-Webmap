@@ -97,7 +97,7 @@ P.formEntry{
     height:300px;
 }
 .my-custom-scrollbar{
-    position: relative;
+
     height: 75px;
     overflow: auto;
   }
