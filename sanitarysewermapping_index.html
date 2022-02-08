@@ -18,44 +18,46 @@
     <title>Root Control Mapping/Data Entry</title>
 </head>
 <body>
-    <div id="top">
-        <div id="mapdiv"></div>
-            <div class="dataEntry">
-            <h4> Log Root Control</h6>
-            <form id="logRC" method="post">
-                <p class="formEntry">
-                    <label for="facilityid">Facility ID: </label>
-                    <input type="text" class= "form-control" name="facilityid" id="facilityid" placeholder="Facility ID Entry">
-                    <label for="datetreated">Date Treated: </label>
-                    <input type="text" class= "form-control" name="datetreated" id="datetreated" placeholder="Date Treated">
-                    <label for="subbasin">Subbasin: </label>
-                    <input type="text" class = "form-control" name="subbasin" id="subbasin" placeholder="Subbasin">
-                    <label for="lengthtreated">Length Treated: </label>
-                    <input type="text" class="form-control" name="lengthtreated" id="lengthtreated" placeholder="Length Treated">
-                </p>
-                <p>
-                    <input class="form-control" type="button" value="Enter" style= "width:25%;" id="logger">
-                </p>
-            </form>
-            <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+    <div>
+        <div id="top">
+            <div id="mapdiv"></div>
+                <div class="dataEntry">
+                <h4> Log Root Control</h6>
+                <form id="logRC" method="post">
+                    <p class="formEntry">
+                        <label for="facilityid">Facility ID: </label>
+                        <input type="text" class= "form-control" name="facilityid" id="facilityid" placeholder="Facility ID Entry">
+                        <label for="datetreated">Date Treated: </label>
+                        <input type="text" class= "form-control" name="datetreated" id="datetreated" placeholder="Date Treated">
+                        <label for="subbasin">Subbasin: </label>
+                        <input type="text" class = "form-control" name="subbasin" id="subbasin" placeholder="Subbasin">
+                        <label for="lengthtreated">Length Treated: </label>
+                        <input type="text" class="form-control" name="lengthtreated" id="lengthtreated" placeholder="Length Treated">
+                    </p>
+                    <p>
+                        <input class="form-control" type="button" value="Enter" style= "width:25%;" id="logger">
+                    </p>
+                </form>
+                <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                </div>
+                </div>
+            <div id="mapLegend">
+                <select  class="subbasinII" >
+                    <option value='CC01'>CC01</option>
+                    <option value='CC02'>CC02</option>
+                    <option value='CC03'>CC03</option>
+                    <option value='CC04'>CC04</option>
+                    <option value='CC05'>CC05</option>
+                </select><br>
+                <input type="button" name="save" value="Query" id="filterSubmit">
             </div>
-            </div>
-        <div id="mapLegend">
-            <select  class="subbasinII" >
-                <option value='CC01'>CC01</option>
-                <option value='CC02'>CC02</option>
-                <option value='CC03'>CC03</option>
-                <option value='CC04'>CC04</option>
-                <option value='CC05'>CC05</option>
-            </select><br>
-            <input type="button" name="save" value="Query" id="filterSubmit">
         </div>
-    </div>
-    <div id="bottom">
-        <div id="fromDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
+        <div id="bottom">
+            <div id="fromDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
 
-        <div id="toDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
+            <div id="toDB" class="table-wrapper-scroll-y my-custom-scrollbar"></div>
+        </div>
     </div>
     <script type="text/javascript">
     //Tables
