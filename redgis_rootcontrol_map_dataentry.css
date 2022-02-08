@@ -74,16 +74,20 @@ P.formEntry{
     top: 511px;
 }
 #bottom{
-    position:relative;
+
     top:650px;
     width:1403px;
     height:310px;
     background-color: white;
     border: 2px solid var(--color-dark--2);
     padding:5px;
+    display: flex;
+    flex-direction:row;
+    align-content:center;
+    justify-content: center;
 }
 #fromDB{
-    position:relative;
+
     width:690px;
     border: 2px solid rgb(235, 226, 226);
     height:300px;
